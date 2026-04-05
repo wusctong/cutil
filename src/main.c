@@ -6,10 +6,11 @@ int main(void) {
     InitWindow(800, 600, "Class Utility");
     SetTargetFPS(60);
     SetRandomSeed((unsigned int)time(NULL));
-    Node* rp = &n1;
+    Node* class = create_nodes({"CMZ", 1}, {"YXH", 2}, {"WT", 3});
+    Node* rp = go_node(class, 0);
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_R)) rp = get_rp(&n1);
+        if (IsKeyPressed(KEY_R)) rp = get_random_node(class);
 
         ClearBackground(WHITE);
         BeginDrawing();
@@ -18,6 +19,5 @@ int main(void) {
     }
 
     CloseWindow();
-
     return 0;
 }
