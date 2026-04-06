@@ -4,6 +4,10 @@
 #include <string.h>
 #include <time.h>
 
+#define MAX_ROW 1024
+#define MAX_COLUMN 1024
+
+// Data
 typedef struct Node {
     char* name;
     int num;
@@ -74,3 +78,13 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
     create_nodes_impl(                                             \
         (int)(sizeof((NodeArg[]){__VA_ARGS__}) / sizeof(NodeArg)), \
         (NodeArg[]){__VA_ARGS__})
+
+// Render
+typedef struct {
+    size_t width[MAX_COLUMN];
+    size_t height[MAX_ROW];
+} Grid;
+typedef struct {
+} Button;
+
+void draw_button() {}
