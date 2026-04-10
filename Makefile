@@ -1,4 +1,11 @@
-SHELL  := /usr/sbin/bash
+UNAME := $(shell uname -s)
+ifeq ($(UNAME),Darwin)
+	SHELL := /bin/bash
+	LDFLAGS := -I/opt/homebrew/include -L/opt/homebrew/lib
+else
+	SHELL := /usr/sbin/bash
+	LDFLAGS :=
+endif
 
 CC     := clang
 CFLAGS := -Wall -Wextra -pedantic -std=c11 -O2
@@ -14,7 +21,7 @@ build: clean
 		mkdir -p build; \
 		echo " [+] Created build dir"; \
 	fi
-	@$(CC) $(CFLAGS) $(LIBS) -o build/$(OUTPUT) \
+	@$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o build/$(OUTPUT) \
 		src/main.c
 	@echo " [+] Successfully build"
 
