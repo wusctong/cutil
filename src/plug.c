@@ -107,7 +107,7 @@ void resize_window(Grid g) {
 Vector2 get_element_pos(Element e, Grid g) {
     Vector2 r = {0, 0};
     for (size_t i = 0; i < e.column; i++) r.x += g.width[i];
-    for (size_t i = 0; i < e.row; i++) r.x += g.height[i];
+    for (size_t i = 0; i < e.row; i++) r.y += g.height[i];
     r.x += e.padding.l;
     r.y += e.padding.u;
     return r;

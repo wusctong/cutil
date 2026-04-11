@@ -8,7 +8,7 @@ else
 endif
 
 CC     := clang
-CFLAGS := -Wall -Wextra -pedantic -std=c11 -O2
+CFLAGS := -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -std=c11 -O2
 LIBS   := -lraylib -lm
 OUTPUT := cutil
 

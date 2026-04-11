@@ -1,5 +1,3 @@
-#include <raylib.h>
-
 #include "plug.c"
 
 int main(void) {
