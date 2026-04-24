@@ -11,7 +11,7 @@ int main(void) {
     Element res = {0,    0,     "...", 0,     0,           60.0f,
                    2.0f, WHITE, WHITE, BLACK, {0, 0, 0, 0}};
 
-    Node* class = create_nodes({"cmz", 1}, {"YXH", 2}, {"WT", 3});
+    Node* class = create_nodes({"CMZ", 1}, {"CQY", 2}, {"YYX", 3}, {"YYC", 4}, {"YXH", 5}, {"WT", 6});
     Node* rp = go_node(class, 0);
 
     resize_window(root);
