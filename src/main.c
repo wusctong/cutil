@@ -1,4 +1,4 @@
-include "plug.c"
+#include "plug.c"
 
 int main(void) {
     InitWindow(800, 600, "Class Utility");
