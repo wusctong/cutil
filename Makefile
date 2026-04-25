@@ -22,10 +22,10 @@ clean:
 	@echo " [-] Removed all build files"
 
 build: clean
-	@if [ ! -d "build" ]; then \
-		mkdir -p build; \
-		echo " [+] Created build dir"; \
-	fi
+	@mkdir -p build
+	@echo " [+] Created build dir"
+	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
+	@echo " [+] Copied CN Font"
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o build/$(OUTPUT) \
 		src/main.c
 	@echo " [+] Successfully built"

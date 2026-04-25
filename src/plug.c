@@ -79,6 +79,25 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
         (int)(sizeof((NodeArg[]){__VA_ARGS__}) / sizeof(NodeArg)), \
         (NodeArg[]){__VA_ARGS__})
 
+static int *build_cjk_codepoints(int *outCount)
+{
+    int count = (0x00FF - 0x0020 + 1)
+              + (0x303F - 0x3000 + 1)
+              + (0x9FFF - 0x4E00 + 1)
+              + (0xFFEF - 0xFF00 + 1);
+
+    int *codepoints = (int *)malloc(count * sizeof(int));
+    int idx = 0;
+
+    for (int c = 0x0020; c <= 0x00FF; c++) codepoints[idx++] = c;
+    for (int c = 0x3000; c <= 0x303F; c++) codepoints[idx++] = c;
+    for (int c = 0x4E00; c <= 0x9FFF; c++) codepoints[idx++] = c;
+    for (int c = 0xFF00; c <= 0xFFEF; c++) codepoints[idx++] = c;
+
+    *outCount = idx;
+    return codepoints;
+}
+
 // Render
 typedef struct {
     size_t l, r, u, d;
@@ -95,6 +114,7 @@ typedef struct {
     float border_width, radius, font_size, spacing;
     Color border_color, bg_color, fg_color;
     Padding padding;
+    Font font;
 } Element;
 
 void resize_window(Grid g) {
@@ -142,7 +162,7 @@ void draw_element(Element e, Grid g) {
     DrawRectangleRounded(border, outer_roundness, 10, e.border_color);
     DrawRectangleRounded(bg, inner_roundness, 10, e.bg_color);
 
-    Font font = GetFontDefault();
+    Font font = e.font;
     Vector2 textSize = MeasureTextEx(font, e.text, e.font_size, e.spacing);
     Vector2 textPos = {bg.x + (bg.width / 2) - (textSize.x / 2),
                        bg.y + (bg.height / 2) - (textSize.y / 2)};
