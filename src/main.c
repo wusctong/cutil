@@ -68,8 +68,6 @@ int main(void) {
     Grid* g_ptr = &g_menu;
 
     while (!WindowShouldClose()) {
-        resize_window(*g_ptr);
-
         if (g_ptr == &g_menu) {
             if (is_element_pressed(MOUSE_BUTTON_LEFT, e_rand_ppl, g_menu)) {
                 g_ptr = &g_rand_ppl;
@@ -87,8 +85,10 @@ int main(void) {
             }
         }
 
-        ClearBackground(WHITE);
+        resize_window(*g_ptr);
+
         BeginDrawing();
+        ClearBackground(WHITE);
         if (g_ptr == &g_menu) {
             draw_element(e_rand_ppl, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {

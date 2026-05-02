@@ -79,14 +79,11 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
         (int)(sizeof((NodeArg[]){__VA_ARGS__}) / sizeof(NodeArg)), \
         (NodeArg[]){__VA_ARGS__})
 
-static int *build_cjk_codepoints(int *outCount)
-{
-    int count = (0x00FF - 0x0020 + 1)
-              + (0x303F - 0x3000 + 1)
-              + (0x9FFF - 0x4E00 + 1)
-              + (0xFFEF - 0xFF00 + 1);
+static int* build_cjk_codepoints(int* outCount) {
+    int count = (0x00FF - 0x0020 + 1) + (0x303F - 0x3000 + 1) +
+                (0x9FFF - 0x4E00 + 1) + (0xFFEF - 0xFF00 + 1);
 
-    int *codepoints = (int *)malloc(count * sizeof(int));
+    int* codepoints = (int*)malloc(count * sizeof(int));
     int idx = 0;
 
     for (int c = 0x0020; c <= 0x00FF; c++) codepoints[idx++] = c;
@@ -137,8 +134,9 @@ bool is_element_pressed(int mouse_button, Element e, Grid g) {
     Vector2 pos = get_element_pos(e, g);
     int mouse_x = GetMouseX(), mouse_y = GetMouseY();
     return (IsMouseButtonPressed(mouse_button) && mouse_x >= pos.x &&
-            mouse_x <= pos.x + g.width[e.column] && mouse_y >= pos.y &&
-            mouse_y <= pos.y + g.height[e.row]);
+            mouse_x <= pos.x + g.width[e.column] - e.padding.l - e.padding.r &&
+            mouse_y >= pos.y &&
+            mouse_y <= pos.y + g.height[e.row] - e.padding.u - e.padding.d);
 }
 
 void draw_element(Element e, Grid g) {
