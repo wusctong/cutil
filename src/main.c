@@ -1,4 +1,5 @@
 #include "plug.c"
+#include "raylib.h"
 
 #define CN_FONT_PATH "SourceHanSerifSC-VF.ttf"
 
@@ -12,22 +13,42 @@ int main(void) {
     Font cn_font = LoadFontEx(CN_FONT_PATH, 40, codepoints, cpCount);
     free(codepoints);
 
-    Grid root = {{300, 200}, {100}};
-    Element run = {1,
-                   0,
-                   "RUN",
-                   2.0f,
-                   10.0f,
-                   40.0f,
-                   2.0f,
-                   BLACK,
-                   WHITE,
-                   BLACK,
-                   {10, 10, 10, 10},
-                   GetFontDefault()};
-    Element res = {0,     0,     "...",        0,      0, 60.0f, 2.0f, WHITE,
-                   WHITE, BLACK, {0, 0, 0, 0}, cn_font};
+    Element e_back = {0,
+                      0,
+                      "<",
+                      2.0f,
+                      10.0f,
+                      40.0f,
+                      2.0f,
+                      BLACK,
+                      WHITE,
+                      BLACK,
+                      {10, 10, 10, 10},
+                      GetFontDefault()};
+    Element e_run = {2,
+                     0,
+                     "RUN",
+                     2.0f,
+                     10.0f,
+                     40.0f,
+                     2.0f,
+                     BLACK,
+                     WHITE,
+                     BLACK,
+                     {10, 10, 10, 10},
+                     GetFontDefault()};
 
+    // Menu
+    Grid g_menu = {{400}, {100, 100}};
+    Element e_rand_ppl = {
+        0,     0,     "随机抽人",       2.0f,   10.0f, 60.0f, 2.0f, BLACK,
+        WHITE, BLACK, {10, 10, 10, 10}, cn_font};
+
+    // Random People
+    Grid g_rand_ppl = {{100, 300, 200}, {100}};
+    Element e_rand_ppl_res = {1,     0,     "...",        0,
+                              0,     60.0f, 2.0f,         WHITE,
+                              WHITE, BLACK, {0, 0, 0, 0}, cn_font};
     Node* class = create_nodes(
         {"曹萌哲", 1}, {"陈清扬", 2}, {"陈思涵", 3}, {"丁子洵", 4},
         {"顾锦海", 5}, {"蒋力", 6}, {"焦澄杨", 7}, {"金鑫", 8}, {"林诺", 9},
@@ -36,25 +57,45 @@ int main(void) {
         {"杨艾橦", 18}, {"杨子懿", 19}, {"尤书涵", 20}, {"于一晨", 21},
         {"袁宇轩", 22}, {"詹圣泽", 23}, {"何珈霖", 24}, {"李若绮", 25},
         {"李思妍", 26}, {"刘梦涵", 27}, {"钱奕轩", 28}, {"钱玥辰", 29},
-        {"邵逸可", 30}, {"王璨奕", 31}, {"邬慕瑶", 32}, {"吴歆雅", 33},
-        {"奚贝拉", 34}, {"项茜", 35}, {"杨沈奕", 36}, {"张敬涵", 37},
-        {"张洛瑶", 38}, {"张雯萱", 39}, {"周昕妤", 40}, {"朱可馨", 41},
-        {"王佳琪", 42}, {"杨孝恒", 43}, {"俞闵亮", 44}, {"裴冉", 45});
+        {"邵逸可", 30}, {"王璨奕", 31}, {"王佳琪", 32}, {"邬慕瑶", 33},
+        {"吴歆雅", 34}, {"奚贝拉", 35}, {"项茜", 36}, {"杨沈奕", 37},
+        {"张敬涵", 38}, {"张洛瑶", 39}, {"张雯萱", 40}, {"周昕妤", 41},
+        {"朱可馨", 42}, {"杨孝恒", 43}, {"严伟宁", 44}, {"俞闵亮", 44},
+        {"裴冉", 45});
     Node* rp = go_node(class, 0);
 
-    resize_window(root);
+    // Global
+    Grid* g_ptr = &g_menu;
 
     while (!WindowShouldClose()) {
-        if (is_element_pressed(MOUSE_BUTTON_LEFT, run, root)) {
-            rp = get_random_node(class);
-            res.text = strdup(TextFormat("%d %s", rp->num, rp->name));
+        resize_window(*g_ptr);
+
+        if (g_ptr == &g_menu) {
+            if (is_element_pressed(MOUSE_BUTTON_LEFT, e_rand_ppl, g_menu)) {
+                g_ptr = &g_rand_ppl;
+            }
+        } else {
+            if (is_element_pressed(MOUSE_BUTTON_LEFT, e_back, *g_ptr)) {
+                g_ptr = &g_menu;
+            }
+            if (g_ptr == &g_rand_ppl) {
+                if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
+                    rp = get_random_node(class);
+                    e_rand_ppl_res.text =
+                        strdup(TextFormat("%d %s", rp->num, rp->name));
+                }
+            }
         }
 
         ClearBackground(WHITE);
         BeginDrawing();
-        // DrawText(TextFormat("%s %d", rp->name, rp->num), 10, 10, 50, BLACK);
-        draw_element(res, root);
-        draw_element(run, root);
+        if (g_ptr == &g_menu) {
+            draw_element(e_rand_ppl, *g_ptr);
+        } else if (g_ptr == &g_rand_ppl) {
+            draw_element(e_back, *g_ptr);
+            draw_element(e_rand_ppl_res, *g_ptr);
+            draw_element(e_run, *g_ptr);
+        }
         EndDrawing();
     }
 
