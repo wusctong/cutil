@@ -1,5 +1,6 @@
+#include <raylib.h>
+
 #include "plug.c"
-#include "raylib.h"
 
 #define CN_FONT_PATH "SourceHanSerifSC-VF.ttf"
 
@@ -98,6 +99,11 @@ int main(void) {
         }
         EndDrawing();
     }
+
+    UnloadFont(cn_font);
+    free_nodes(class);
+    free_node(rp);
+    free(g_ptr);
 
     CloseWindow();
     return 0;
