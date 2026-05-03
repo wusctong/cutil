@@ -15,7 +15,7 @@ typedef struct Node {
 } Node;
 
 typedef struct {
-    char* name;
+    const char* name;
     int num;
 } NodeArg;
 
@@ -36,7 +36,7 @@ void free_nodes(Node* head) {
     while (head) {
         Node* tmp = head;
         head = head->next;
-        free(tmp);
+        free_node(tmp);
     }
 }
 
@@ -60,7 +60,7 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
     Node *head = NULL, *tail = NULL;
     for (size_t i = 0; i < count; i++) {
         Node* new = malloc(sizeof(Node));
-        new->name = args[i].name;
+        new->name = strdup(args[i].name);
         new->num = args[i].num;
         new->next = NULL;
 

@@ -47,9 +47,9 @@ int main(void) {
 
     // Random People
     Grid g_rand_ppl = {{100, 300, 200}, {100}};
-    Element e_rand_ppl_res = {1,     0,     "...",        0,
-                              0,     60.0f, 2.0f,         WHITE,
-                              WHITE, BLACK, {0, 0, 0, 0}, cn_font};
+    Element e_rand_ppl_res = {1,     0,     strdup("..."), 0,
+                              0,     60.0f, 2.0f,          WHITE,
+                              WHITE, BLACK, {0, 0, 0, 0},  cn_font};
     Node* class = create_nodes(
         {"曹萌哲", 1}, {"陈清扬", 2}, {"陈思涵", 3}, {"丁子洵", 4},
         {"顾锦海", 5}, {"蒋力", 6}, {"焦澄杨", 7}, {"金鑫", 8}, {"林诺", 9},
@@ -67,29 +67,32 @@ int main(void) {
 
     // Global
     Grid* g_ptr = &g_menu;
+    resize_window(*g_ptr);
 
     while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(WHITE);
+
         if (g_ptr == &g_menu) {
             if (is_element_pressed(MOUSE_BUTTON_LEFT, e_rand_ppl, g_menu)) {
                 g_ptr = &g_rand_ppl;
+                resize_window(*g_ptr);
             }
         } else {
             if (is_element_pressed(MOUSE_BUTTON_LEFT, e_back, *g_ptr)) {
                 g_ptr = &g_menu;
+                resize_window(*g_ptr);
             }
             if (g_ptr == &g_rand_ppl) {
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
                     rp = get_random_node(class);
+                    free(e_rand_ppl_res.text);
                     e_rand_ppl_res.text =
                         strdup(TextFormat("%d %s", rp->num, rp->name));
                 }
             }
         }
 
-        resize_window(*g_ptr);
-
-        BeginDrawing();
-        ClearBackground(WHITE);
         if (g_ptr == &g_menu) {
             draw_element(e_rand_ppl, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {
@@ -101,9 +104,8 @@ int main(void) {
     }
 
     UnloadFont(cn_font);
+    free(e_rand_ppl_res.text);
     free_nodes(class);
-    free_node(rp);
-    free(g_ptr);
 
     CloseWindow();
     return 0;
