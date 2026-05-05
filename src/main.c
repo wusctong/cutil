@@ -15,35 +15,13 @@ int main(void) {
     Font cn_font = LoadFontEx(CN_FONT_PATH, 40, codepoints, cpCount);
     free(codepoints);
 
-    Element e_back = {0,
-                      0,
-                      "<",
-                      2.0f,
-                      10.0f,
-                      40.0f,
-                      2.0f,
-                      BLACK,
-                      WHITE,
-                      BLACK,
-                      {10, 10, 10, 10},
-                      GetFontDefault()};
-    Element e_run = {2,
-                     0,
-                     "RUN",
-                     2.0f,
-                     10.0f,
-                     40.0f,
-                     2.0f,
-                     BLACK,
-                     WHITE,
-                     BLACK,
-                     {10, 10, 10, 10},
-                     GetFontDefault()};
-
     // Menu
     Grid g_menu = {{400}, {100, 100}};
     Element e_rand_ppl = {
         0,     0,     "随机抽人",       2.0f,   10.0f, 60.0f, 2.0f, BLACK,
+        WHITE, BLACK, {10, 10, 10, 10}, cn_font};
+    Element e_nodepad = {
+        0,     1,     "笔记板",         2.0f,   10.0f, 60.0f, 2.0f, BLACK,
         WHITE, BLACK, {10, 10, 10, 10}, cn_font};
 
     // Random People
@@ -69,8 +47,48 @@ int main(void) {
     }
     Node* rp = go_node(class, 0);
 
+    // Notepad
+    Grid g_notepad = {{500}, {100, 500}};
+    Element e_notepad_pad = {0,
+                             1,
+                             "",
+                             2.0f,
+                             10.0f,
+                             40.0f,
+                             2.0f,
+                             BLACK,
+                             WHITE,
+                             BLACK,
+                             {10, 10, 10, 10},
+                             GetFontDefault()};
+
     // Global
     Grid* g_ptr = &g_menu;
+    Element e_back = {0,
+                      0,
+                      "<",
+                      2.0f,
+                      10.0f,
+                      40.0f,
+                      2.0f,
+                      BLACK,
+                      WHITE,
+                      BLACK,
+                      {10, 10, 10, 10},
+                      GetFontDefault()};
+    Element e_run = {2,
+                     0,
+                     "RUN",
+                     2.0f,
+                     10.0f,
+                     40.0f,
+                     2.0f,
+                     BLACK,
+                     WHITE,
+                     BLACK,
+                     {10, 10, 10, 10},
+                     GetFontDefault()};
+
     resize_window(*g_ptr);
 
     while (!WindowShouldClose()) {
@@ -80,6 +98,10 @@ int main(void) {
         if (g_ptr == &g_menu) {
             if (is_element_pressed(MOUSE_BUTTON_LEFT, e_rand_ppl, g_menu)) {
                 g_ptr = &g_rand_ppl;
+                resize_window(*g_ptr);
+            } else if (is_element_pressed(MOUSE_BUTTON_LEFT, e_nodepad,
+                                          g_menu)) {
+                g_ptr = &g_notepad;
                 resize_window(*g_ptr);
             }
         } else {
@@ -99,10 +121,14 @@ int main(void) {
 
         if (g_ptr == &g_menu) {
             draw_element(e_rand_ppl, *g_ptr);
+            draw_element(e_nodepad, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {
             draw_element(e_back, *g_ptr);
             draw_element(e_rand_ppl_res, *g_ptr);
             draw_element(e_run, *g_ptr);
+        } else if (g_ptr == &g_notepad) {
+            draw_element(e_back, *g_ptr);
+            draw_element(e_notepad_pad, *g_ptr);
         }
         EndDrawing();
     }
