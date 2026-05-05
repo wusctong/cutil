@@ -26,6 +26,8 @@ build: clean
 	@echo " [+] Created build dir"
 	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
 	@echo " [+] Copied CN Font"
+	@cp names.txt build/names.txt
+	@echo " [+] Copied Name List"
 	@$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o build/$(OUTPUT) \
 		src/main.c
 	@echo " [+] Successfully built"

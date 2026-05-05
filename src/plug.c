@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -78,6 +79,40 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
     create_nodes_impl(                                             \
         (int)(sizeof((NodeArg[]){__VA_ARGS__}) / sizeof(NodeArg)), \
         (NodeArg[]){__VA_ARGS__})
+
+Node* create_nodes_from_file(const char* file_path) {
+    FILE* file = fopen(file_path, "r");
+    if (!file) return NULL;
+
+    Node *head = NULL, *tail = NULL;
+    char buffer[1024];
+    int count = 1;
+
+    while (fgets(buffer, sizeof(buffer), file)) {
+        size_t len = strlen(buffer);
+        while (len > 0 &&
+               (buffer[len - 1] == '\n' || buffer[len - 1] == '\r')) {
+            buffer[len - 1] = '\0';
+            len--;
+        }
+
+        if (len == 0) continue;
+
+        Node* new_node = malloc(sizeof(Node));
+        new_node->name = strdup(buffer);
+        new_node->num = count++;
+        new_node->next = NULL;
+
+        if (!head)
+            head = new_node;
+        else
+            tail->next = new_node;
+        tail = new_node;
+    }
+
+    fclose(file);
+    return head;
+}
 
 static int* build_cjk_codepoints(int* outCount) {
     int count = (0x00FF - 0x0020 + 1) + (0x303F - 0x3000 + 1) +
