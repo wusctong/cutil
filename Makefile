@@ -1,21 +1,31 @@
 UNAME := $(shell uname -s)
 
+UNIX-CC := clang
+WIN-CC  := x86_64-w64-mingw32-gcc
+OUTPUT  := cutil
+
+RAYLIB_WIN_PATH := ../../cross_platform/raylib
+RAYLIB_WIN_INC  := -I$(RAYLIB_WIN_PATH)/include
+RAYLIB_WIN_LIB  := -L$(RAYLIB_WIN_PATH)/lib
+
+CFLAGS  := -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -std=c11 -O2
+
 ifeq ($(UNAME),Darwin)
-    SHELL    := /bin/bash
-    # DEV_PATH := $(abspath ../dev)
-	DEV_PATH := /opt/homebrew
-	CFLAGS_EXTRA := -I$(DEV_PATH)/include
-    LDFLAGS  := -L$(DEV_PATH)/lib -Wl,-rpath,$(DEV_PATH)/lib
+    SHELL        := /bin/bash
+    DEV_PATH     := $(shell brew --prefix)
+    CFLAGS_EXTRA := -I$(DEV_PATH)/include
+    LDFLAGS_UNIX := -L$(DEV_PATH)/lib -Wl,-rpath,$(DEV_PATH)/lib
+    LIBS_UNIX    := -lraylib -lm
 else
-    SHELL    := /usr/sbin/bash
-    LDFLAGS  :=
-    CFLAGS_EXTRA :=
+    SHELL        := /bin/bash
+    LDFLAGS_UNIX := 
+    CFLAGS_EXTRA := 
+    LIBS_UNIX    := -lraylib -lm
 endif
 
-CC      := clang
-CFLAGS  := -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -std=c11 -O2 $(CFLAGS_EXTRA)
-LIBS    := -lraylib -lm
-OUTPUT  := cutil
+WIN_LIBS := -lraylib -lopengl32 -lgdi32 -lwinmm -lpthread -lws2_32 -static
+
+.PHONY: clean build build-win
 
 clean:
 	@rm -rf build/*
@@ -27,7 +37,18 @@ build: clean
 	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
 	@echo " [+] Copied CN Font"
 	@cp names.txt build/names.txt
-	@echo " [+] Copied Name List"
-	@$(CC) $(CFLAGS) $(LDFLAGS) $(LIBS) -o build/$(OUTPUT) \
-		src/main.c
-	@echo " [+] Successfully built"
+	@echo " [+] Copied name list"
+	@$(UNIX-CC) $(CFLAGS) $(CFLAGS_EXTRA) $(LDFLAGS_UNIX) -o build/$(OUTPUT) \
+		src/main.c $(LIBS_UNIX)
+	@echo " [+] Successfully built (Unix)"
+
+build-win: clean
+	@mkdir -p build
+	@echo " [+] Created build dir"
+	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
+	@echo " [+] Copied CN Font"
+	@cp names.txt build/names.txt
+	@echo " [+] Copied name list"
+	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
+		$(RAYLIB_WIN_LIB) $(WIN_LIBS)
+	@echo " [+] Successfully built (Windows)"
