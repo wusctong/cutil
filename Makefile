@@ -34,7 +34,7 @@ clean:
 build: clean
 	@mkdir -p build
 	@echo " [+] Created build dir"
-	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
+	@cp SourceHanSerifSC-VF.ttf build/font.ttf
 	@echo " [+] Copied CN Font"
 	@cp names.txt build/names.txt
 	@echo " [+] Copied name list"
@@ -45,7 +45,7 @@ build: clean
 build-win: clean
 	@mkdir -p build
 	@echo " [+] Created build dir"
-	@cp SourceHanSerifSC-VF.ttf build/SourceHanSerifSC-VF.ttf
+	@cp SourceHanSerifSC-VF.ttf build/font.ttf
 	@echo " [+] Copied CN Font"
 	@cp names.txt build/names.txt
 	@echo " [+] Copied name list"

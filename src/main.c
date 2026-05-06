@@ -3,7 +3,7 @@
 #include "plug.c"
 
 #define CLASS_FILE_PATH "names.txt"
-#define CN_FONT_PATH "SourceHanSerifSC-VF.ttf"
+#define CN_FONT_PATH "font.ttf"
 
 int main(void) {
     InitWindow(800, 600, "Class Utility");
