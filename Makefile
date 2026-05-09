@@ -18,8 +18,8 @@ ifeq ($(UNAME),Darwin)
     LIBS_UNIX    := -lraylib -lm
 else
     SHELL        := /bin/bash
-    LDFLAGS_UNIX := 
-    CFLAGS_EXTRA := 
+    LDFLAGS_UNIX :=
+    CFLAGS_EXTRA :=
     LIBS_UNIX    := -lraylib -lm
 endif
 
@@ -29,33 +29,29 @@ WIN_LIBS := -lraylib -lopengl32 -lgdi32 -lwinmm -lpthread -lws2_32 -static
 
 clean:
 	@rm -rf build/*
-	@echo " [-] Removed all build files"
+	@echo " - Removed all build files"
 
 build: clean
 	@mkdir -p build
-	@echo " [+] Created build dir"
-	@cp SourceHanSerifSC-VF.ttf build/font.ttf
-	@echo " [+] Copied CN Font"
-	@cp names.txt build/names.txt
-	@echo " [+] Copied name list"
+	@echo " + Created build dir"
+	@cp ../../others/SourceHanSerifSC-VF.ttf build/font.ttf
+	@echo " + Copied CN Font"
 	@$(UNIX-CC) $(CFLAGS) $(CFLAGS_EXTRA) $(LDFLAGS_UNIX) -o build/$(OUTPUT) \
 		src/main.c $(LIBS_UNIX)
-	@echo " [+] Successfully built (Unix)"
+	@echo " + Successfully built (Unix)"
 
 build-win: clean
 	@mkdir -p build
-	@echo " [+] Created build dir"
-	@cp SourceHanSerifSC-VF.ttf build/font.ttf
-	@echo " [+] Copied CN Font"
-	@cp names.txt build/names.txt
-	@echo " [+] Copied name list"
+	@echo " + Created build dir"
+	@cp ../../others/SourceHanSerifSC-VF.ttf build/font.ttf
+	@echo " + Copied CN Font"
 	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
 		$(RAYLIB_WIN_LIB) $(WIN_LIBS)
-	@echo " [+] Successfully built (Windows)"
+	@echo " + Successfully built (Windows)"
 
 build-win-release: clean
 	@mkdir -p build
-	@echo " [+] Created build dir"
+	@echo " + Created build dir"
 	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
 		$(RAYLIB_WIN_LIB) $(WIN_LIBS) -mwindows
-	@echo " [+] Successfully built (Windows)"
+	@echo " + Successfully built (Windows Release)"
