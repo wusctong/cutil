@@ -2,8 +2,9 @@
 
 #include "plug.c"
 
-#define CLASS_FILE_PATH "names.txt"
 #define CN_FONT_PATH "font.ttf"
+#define CONFIG_PATH "config.txt"
+#define CLASS_FILE_PATH "names.txt"
 
 int main(void) {
     InitWindow(800, 600, "Class Utility");
@@ -15,8 +16,11 @@ int main(void) {
     Font cn_font = LoadFontEx(CN_FONT_PATH, 40, codepoints, cpCount);
     free(codepoints);
 
+    Config conf = read_config(CONFIG_PATH);
+    if (conf.scale == 0) conf.scale = 100;
+
     // Menu
-    Grid g_menu = {{400}, {100, 100}};
+    Grid g_menu = {{4 * conf.scale}, {conf.scale, conf.scale}};
     Element e_rand_ppl = {
         0,     0,     "随机抽人",       2.0f,   10.0f, 60.0f, 2.0f, BLACK,
         WHITE, BLACK, {10, 10, 10, 10}, cn_font};
@@ -25,7 +29,8 @@ int main(void) {
         WHITE, BLACK, {10, 10, 10, 10}, cn_font};
 
     // Random People
-    Grid g_rand_ppl = {{100, 300, 200}, {100}};
+    Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, 2 * conf.scale},
+                       {conf.scale}};
     Element e_rand_ppl_res = {1,     0,     strdup("..."), 0,
                               0,     60.0f, 2.0f,          WHITE,
                               WHITE, BLACK, {0, 0, 0, 0},  cn_font};
@@ -48,7 +53,7 @@ int main(void) {
     Node* rp = go_node(class, 0);
 
     // Notepad
-    Grid g_notepad = {{500}, {100, 500}};
+    Grid g_notepad = {{5 * conf.scale}, {1 * conf.scale, 5 * conf.scale}};
     Element e_notepad_pad = {0,
                              1,
                              "",
