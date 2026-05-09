@@ -52,3 +52,10 @@ build-win: clean
 	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
 		$(RAYLIB_WIN_LIB) $(WIN_LIBS)
 	@echo " [+] Successfully built (Windows)"
+
+build-win-release: clean
+	@mkdir -p build
+	@echo " [+] Created build dir"
+	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
+		$(RAYLIB_WIN_LIB) $(WIN_LIBS) -mwindows
+	@echo " [+] Successfully built (Windows)"
