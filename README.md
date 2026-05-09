@@ -6,7 +6,7 @@ Utility functions for classroom.
 
 `make` - Build tool.
 
-`raylib.` - Graphics library.
+`raylib` - Graphics library.
 
 ## Requirements
 
