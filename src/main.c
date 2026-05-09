@@ -22,18 +22,50 @@ int main(void) {
     // Menu
     Grid g_menu = {{4 * conf.scale}, {conf.scale, conf.scale}};
     Element e_rand_ppl = {
-        0,     0,     "随机抽人",       2.0f,   10.0f, 60.0f, 2.0f, BLACK,
-        WHITE, BLACK, {10, 10, 10, 10}, cn_font};
+        .column = 0,
+        .row = 0,
+        .text = "随机抽人",
+        .border_width = 2.0f,
+        .radius = 10.0f,
+        .font_size = 60.0f,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = cn_font,
+    };
     Element e_nodepad = {
-        0,     1,     "笔记板",         2.0f,   10.0f, 60.0f, 2.0f, BLACK,
-        WHITE, BLACK, {10, 10, 10, 10}, cn_font};
+        .column = 0,
+        .row = 1,
+        .text = "笔记板",
+        .border_width = 2.0f,
+        .radius = 10.0f,
+        .font_size = 60.0f,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = cn_font,
+    };
 
     // Random People
     Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, 2 * conf.scale},
                        {conf.scale}};
-    Element e_rand_ppl_res = {1,     0,     strdup("..."), 0,
-                              0,     60.0f, 2.0f,          WHITE,
-                              WHITE, BLACK, {0, 0, 0, 0},  cn_font};
+    Element e_rand_ppl_res = {.column = 1,
+        .row = 0,
+        .text = strdup("..."),
+        .border_width = 0,
+        .radius = 0,
+        .font_size = 60.0f,
+        .spacing = 2.0f,
+        .border_color = WHITE,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {0, 0, 0, 0},
+        .font = cn_font,
+    };
     Node* class = create_nodes_from_file(CLASS_FILE_PATH);
     if (class == NULL) {
         class = create_nodes(
@@ -69,30 +101,30 @@ int main(void) {
 
     // Global
     Grid* g_ptr = &g_menu;
-    Element e_back = {0,
-                      0,
-                      "<",
-                      2.0f,
-                      10.0f,
-                      40.0f,
-                      2.0f,
-                      BLACK,
-                      WHITE,
-                      BLACK,
-                      {10, 10, 10, 10},
-                      GetFontDefault()};
-    Element e_run = {2,
-                     0,
-                     "RUN",
-                     2.0f,
-                     10.0f,
-                     40.0f,
-                     2.0f,
-                     BLACK,
-                     WHITE,
-                     BLACK,
-                     {10, 10, 10, 10},
-                     GetFontDefault()};
+    Element e_back = {.column = 0,
+                      .row = 0,
+                      .text = "<",
+                      .border_width = 2.0f,
+                      .radius = 10.0f,
+                      .font_size = 40.0f,
+                      .spacing = 2.0f,
+                      .border_color = BLACK,
+                      .bg_color = WHITE,
+                      .fg_color = BLACK,
+                      .padding = {10, 10, 10, 10},
+                      .font = GetFontDefault()};
+    Element e_run = {.column = 2,
+                     .row = 0,
+                     .text = "RUN",
+                     .border_width = 2.0f,
+                     .radius = 10.0f,
+                     .font_size = 40.0f,
+                     .spacing = 2.0f,
+                     .border_color = BLACK,
+                     .bg_color = WHITE,
+                     .fg_color = BLACK,
+                     .padding = {10, 10, 10, 10},
+                     .font = GetFontDefault()};
 
     resize_window(*g_ptr);
 
