@@ -20,6 +20,10 @@ typedef struct {
     int num;
 } NodeArg;
 
+typedef struct {
+    int scale;
+} Config;
+
 Node* go_node(Node* head, size_t depth) {
     for (size_t i = 0; i < depth && head != NULL; i++) {
         head = head->next;
@@ -112,6 +116,21 @@ Node* create_nodes_from_file(const char* file_path) {
 
     fclose(file);
     return head;
+}
+
+Config read_config(const char* file_path) {
+    FILE* file = fopen(file_path, "r");
+    if (file == NULL) return (Config){};
+
+    char buffer[256];
+    if (fgets(buffer, 256, file) == NULL) {
+        fclose(file);
+        return (Config){};
+    }
+
+    Config conf = {.scale = atoi(buffer)};
+    fclose(file);
+    return conf;
 }
 
 static int* build_cjk_codepoints(int* outCount) {
