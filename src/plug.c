@@ -120,12 +120,12 @@ Node* create_nodes_from_file(const char* file_path) {
 
 Config read_config(const char* file_path) {
     FILE* file = fopen(file_path, "r");
-    if (file == NULL) return (Config){};
+    if (file == NULL) return (Config){.scale = 0};
 
     char buffer[256];
     if (fgets(buffer, 256, file) == NULL) {
         fclose(file);
-        return (Config){};
+        return (Config){.scale = 0};
     }
 
     Config conf = {.scale = atoi(buffer)};
