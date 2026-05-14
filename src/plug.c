@@ -88,6 +88,13 @@ Node* create_nodes_from_file(const char* file_path) {
     FILE* file = fopen(file_path, "r");
     if (!file) return NULL;
 
+    unsigned char bom[3] = {0};
+    if (fread(bom, 1, 3, file) == 3) {
+        if (bom[0] != 0xEF || bom[1] != 0xBB || bom[2] != 0xBF) {
+            rewind(file);
+        }
+    }
+
     Node *head = NULL, *tail = NULL;
     char buffer[1024];
     int count = 1;
@@ -99,7 +106,6 @@ Node* create_nodes_from_file(const char* file_path) {
             buffer[len - 1] = '\0';
             len--;
         }
-
         if (len == 0) continue;
 
         Node* new_node = malloc(sizeof(Node));
