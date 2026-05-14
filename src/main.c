@@ -5,6 +5,7 @@
 #define CN_FONT_PATH "font.ttf"
 #define CONFIG_PATH "config.txt"
 #define CLASS_FILE_PATH "names.txt"
+#define MAX_FONT_SIZE 70
 
 int main(void) {
     InitWindow(800, 600, "Class Utility");
@@ -13,7 +14,7 @@ int main(void) {
 
     int cpCount = 0;
     int* codepoints = build_cjk_codepoints(&cpCount);
-    Font cn_font = LoadFontEx(CN_FONT_PATH, 40, codepoints, cpCount);
+    Font cn_font = LoadFontEx(CN_FONT_PATH, MAX_FONT_SIZE, codepoints, cpCount);
     free(codepoints);
 
     Config conf = read_config(CONFIG_PATH);
