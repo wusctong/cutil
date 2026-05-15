@@ -34,7 +34,7 @@ clean:
 build: clean
 	@mkdir -p build
 	@echo " + Created build dir"
-	@cp ../../others/SourceHanSerifSC-VF.ttf build/font.ttf
+	@cp ../../others/NotoSansSC-Bold.ttf build/font.ttf
 	@echo " + Copied CN Font"
 	@$(UNIX-CC) $(CFLAGS) $(CFLAGS_EXTRA) $(LDFLAGS_UNIX) -o build/$(OUTPUT) \
 		src/main.c $(LIBS_UNIX)
@@ -43,7 +43,7 @@ build: clean
 build-win: clean
 	@mkdir -p build
 	@echo " + Created build dir"
-	@cp ../../others/SourceHanSerifSC-VF.ttf build/font.ttf
+	@cp ../../others/NotoSansSC-Bold.ttf build/font.ttf
 	@echo " + Copied CN Font"
 	@$(WIN-CC) $(CFLAGS) $(RAYLIB_WIN_INC) src/main.c -o build/$(OUTPUT).exe \
 		$(RAYLIB_WIN_LIB) $(WIN_LIBS)
