@@ -2,10 +2,23 @@
 
 #include "plug.c"
 
-#define CN_FONT_PATH "font.ttf"
+#define EXTERN_FONT_PATH "font.ttf"
 #define CONFIG_PATH "config.txt"
-#define CLASS_FILE_PATH "names.txt"
+#define NAME_LIST_PATH "names.txt"
+
+#define KEY_RELOAD KEY_R
+
 #define MAX_FONT_SIZE 70
+
+void reload_name_list(Node** name_list, char** text) {
+    Node* new_name_list = create_nodes_from_file(NAME_LIST_PATH);
+    if (new_name_list != NULL) {
+        free_nodes(*name_list);
+        *name_list = new_name_list;
+        free(*text);
+        *text = strdup("...");
+    }
+}
 
 int main(void) {
     InitWindow(800, 600, "Class Utility");
@@ -14,7 +27,8 @@ int main(void) {
 
     int cpCount = 0;
     int* codepoints = build_cjk_codepoints(&cpCount);
-    Font cn_font = LoadFontEx(CN_FONT_PATH, MAX_FONT_SIZE, codepoints, cpCount);
+    Font extern_font =
+        LoadFontEx(EXTERN_FONT_PATH, MAX_FONT_SIZE, codepoints, cpCount);
     free(codepoints);
 
     Config conf = read_config(CONFIG_PATH);
@@ -26,7 +40,7 @@ int main(void) {
         .column = 0,
         .row = 0,
         .text = "随机抽人",
-        .border_width = 2.0f,
+        .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
@@ -34,13 +48,13 @@ int main(void) {
         .bg_color = WHITE,
         .fg_color = BLACK,
         .padding = {10, 10, 10, 10},
-        .font = cn_font,
+        .font = extern_font,
     };
     Element e_nodepad = {
         .column = 0,
         .row = 1,
         .text = "笔记板",
-        .border_width = 2.0f,
+        .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
@@ -48,11 +62,11 @@ int main(void) {
         .bg_color = WHITE,
         .fg_color = BLACK,
         .padding = {10, 10, 10, 10},
-        .font = cn_font,
+        .font = extern_font,
     };
 
     // Random People
-    Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, 2 * conf.scale},
+    Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, conf.scale, conf.scale},
                        {conf.scale}};
     Element e_rand_ppl_res = {
         .column = 1,
@@ -66,11 +80,11 @@ int main(void) {
         .bg_color = WHITE,
         .fg_color = BLACK,
         .padding = {0, 0, 0, 0},
-        .font = cn_font,
+        .font = extern_font,
     };
-    Node* class = create_nodes_from_file(CLASS_FILE_PATH);
-    if (class == NULL) {
-        class = create_nodes(
+    Node* name_list = create_nodes_from_file(NAME_LIST_PATH);
+    if (name_list == NULL) {
+        name_list = create_nodes(
             {"曹萌哲", 1}, {"陈清扬", 2}, {"陈思涵", 3}, {"丁子洵", 4},
             {"顾锦海", 5}, {"蒋力", 6}, {"焦澄杨", 7}, {"金鑫", 8}, {"林诺", 9},
             {"马亦铭", 10}, {"潘昊俊", 11}, {"沈逸欣", 12}, {"宋欣辰", 13},
@@ -84,7 +98,7 @@ int main(void) {
             {"朱可馨", 42}, {"杨孝恒", 43}, {"严伟宁", 44}, {"俞闵亮", 44},
             {"裴冉", 45});
     }
-    Node* rp = go_node(class, 0);
+    Node* rp = go_node(name_list, 0);
 
     // Notepad
     Grid g_notepad = {{5 * conf.scale}, {1 * conf.scale, 5 * conf.scale}};
@@ -99,14 +113,14 @@ int main(void) {
                              WHITE,
                              BLACK,
                              {10, 10, 10, 10},
-                             GetFontDefault()};
+                             extern_font};
 
     // Global
     Grid* g_ptr = &g_menu;
     Element e_back = {.column = 0,
                       .row = 0,
                       .text = "<",
-                      .border_width = 2.0f,
+                      .border_width = 0.02f * conf.scale,
                       .radius = 10.0f,
                       .font_size = 0.6 * conf.scale,
                       .spacing = 2.0f,
@@ -114,11 +128,11 @@ int main(void) {
                       .bg_color = WHITE,
                       .fg_color = BLACK,
                       .padding = {10, 10, 10, 10},
-                      .font = GetFontDefault()};
+                      .font = extern_font};
     Element e_run = {.column = 2,
                      .row = 0,
-                     .text = "RUN",
-                     .border_width = 2.0f,
+                     .text = "抽",
+                     .border_width = 0.02f * conf.scale,
                      .radius = 10.0f,
                      .font_size = 0.4 * conf.scale,
                      .spacing = 2.0f,
@@ -126,11 +140,27 @@ int main(void) {
                      .bg_color = WHITE,
                      .fg_color = BLACK,
                      .padding = {10, 10, 10, 10},
-                     .font = GetFontDefault()};
+                     .font = extern_font};
+    Element e_reload = {.column = 3,
+                        .row = 0,
+                        .text = "载",
+                        .border_width = 0.02f * conf.scale,
+                        .radius = 10.0f,
+                        .font_size = 0.4 * conf.scale,
+                        .spacing = 2.0f,
+                        .border_color = BLACK,
+                        .bg_color = WHITE,
+                        .fg_color = BLACK,
+                        .padding = {10, 10, 10, 10},
+                        .font = extern_font};
 
     resize_window(*g_ptr);
 
     while (!WindowShouldClose()) {
+        if (IsKeyPressed(KEY_RELOAD)) {
+            reload_name_list(&name_list, &e_rand_ppl_res.text);
+        }
+
         BeginDrawing();
         ClearBackground(WHITE);
 
@@ -150,10 +180,13 @@ int main(void) {
             }
             if (g_ptr == &g_rand_ppl) {
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
-                    rp = get_random_node(class);
+                    rp = get_random_node(name_list);
                     free(e_rand_ppl_res.text);
                     e_rand_ppl_res.text =
                         strdup(TextFormat("%d %s", rp->num, rp->name));
+                }
+                if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload, g_rand_ppl)) {
+                    reload_name_list(&name_list, &e_rand_ppl_res.text);
                 }
             }
         }
@@ -165,6 +198,7 @@ int main(void) {
             draw_element(e_back, *g_ptr);
             draw_element(e_rand_ppl_res, *g_ptr);
             draw_element(e_run, *g_ptr);
+            draw_element(e_reload, *g_ptr);
         } else if (g_ptr == &g_notepad) {
             draw_element(e_back, *g_ptr);
             draw_element(e_notepad_pad, *g_ptr);
@@ -172,9 +206,9 @@ int main(void) {
         EndDrawing();
     }
 
-    UnloadFont(cn_font);
+    UnloadFont(extern_font);
     free(e_rand_ppl_res.text);
-    free_nodes(class);
+    free_nodes(name_list);
 
     CloseWindow();
     return 0;
