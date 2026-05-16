@@ -84,6 +84,25 @@ Node* create_nodes_impl(size_t count, NodeArg args[]) {
         (int)(sizeof((NodeArg[]){__VA_ARGS__}) / sizeof(NodeArg)), \
         (NodeArg[]){__VA_ARGS__})
 
+Node* duplicate_nodes(Node* head) {
+    Node *new_head = NULL, *tail = NULL;
+    Node* cur = head;
+    while (cur != NULL) {
+        Node* new = malloc(sizeof(Node));
+        new->name = strdup(cur->name);
+        new->num = cur->num;
+        new->next = NULL;
+
+        if (!new_head)
+            new_head = new;
+        else
+            tail->next = new;
+        tail = new;
+        cur = cur->next;
+    }
+    return new_head;
+}
+
 Node* create_nodes_from_file(const char* file_path) {
     FILE* file = fopen(file_path, "r");
     if (!file) return NULL;
