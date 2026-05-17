@@ -1,6 +1,3 @@
-#include <raylib.h>
-#include <string.h>
-
 #include "plug.c"
 
 #define EXTERN_FONT_PATH "font.ttf"
@@ -11,8 +8,8 @@
 
 #define MAX_FONT_SIZE 70
 
-void reload_name_list(Node** name_list) {
-    Node* new_name_list = create_nodes_from_file(NAME_LIST_PATH);
+void load_name_list(Node** name_list, const char *fp) {
+    Node* new_name_list = create_nodes_from_file(fp);
     if (new_name_list == NULL) return;
     free_nodes(*name_list);
     *name_list = new_name_list;
@@ -205,7 +202,13 @@ int main(void) {
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload,
                                        g_rand_ppl)) {
                     for (size_t i = 0; i < loop_count; i++) rp[i] = &nobody;
-                    reload_name_list(&name_list);
+                    load_name_list(&name_list, NAME_LIST_PATH);
+                }
+                if (IsFileDropped()) {
+                    for (size_t i = 0; i < loop_count; i++) rp[i] = &nobody;
+                    FilePathList df = LoadDroppedFiles();
+                    load_name_list(&name_list, df.paths[0]);
+                    UnloadDroppedFiles(df);
                 }
             }
         }
