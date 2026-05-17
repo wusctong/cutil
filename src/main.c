@@ -11,14 +11,11 @@
 
 #define MAX_FONT_SIZE 70
 
-void reload_name_list(Node** name_list, char** text) {
+void reload_name_list(Node** name_list) {
     Node* new_name_list = create_nodes_from_file(NAME_LIST_PATH);
-    if (new_name_list != NULL) {
-        free_nodes(*name_list);
-        *name_list = new_name_list;
-        free(*text);
-        *text = strdup("...");
-    }
+    if (new_name_list == NULL) return;
+    free_nodes(*name_list);
+    *name_list = new_name_list;
 }
 
 int main(void) {
@@ -175,10 +172,6 @@ int main(void) {
     resize_window(*g_ptr);
 
     while (!WindowShouldClose()) {
-        if (IsKeyPressed(KEY_RELOAD)) {
-            reload_name_list(&name_list, &e_rand_ppl_res_tmp.text);
-        }
-
         BeginDrawing();
         ClearBackground(WHITE);
 
@@ -197,11 +190,11 @@ int main(void) {
                 resize_window(*g_ptr);
             }
             if (g_ptr == &g_rand_ppl) {
+                size_t name_list_len = get_nodes_length(name_list);
+                size_t loop_count = (conf.ppl_count < name_list_len)
+                                        ? conf.ppl_count
+                                        : name_list_len;
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
-                    size_t name_list_len = get_nodes_length(name_list);
-                    size_t loop_count = (conf.ppl_count < name_list_len)
-                                            ? conf.ppl_count
-                                            : name_list_len;
                     for (size_t i = 0; i < loop_count; i++) {
                         rp[i] = get_random_node(name_list);
                         for (size_t j = 0; j < i; j++)
@@ -211,7 +204,8 @@ int main(void) {
                 }
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload,
                                        g_rand_ppl)) {
-                    reload_name_list(&name_list, &e_rand_ppl_res_tmp.text);
+                    for (size_t i = 0; i < loop_count; i++) rp[i] = &nobody;
+                    reload_name_list(&name_list);
                 }
             }
         }
@@ -231,6 +225,7 @@ int main(void) {
             draw_element(e_back, *g_ptr);
             draw_element(e_notepad_pad, *g_ptr);
         }
+
         EndDrawing();
     }
 
