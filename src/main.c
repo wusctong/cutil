@@ -8,7 +8,7 @@
 
 #define MAX_FONT_SIZE 70
 
-void load_name_list(Node** name_list, const char *fp) {
+void load_name_list(Node** name_list, const char* fp) {
     Node* new_name_list = create_nodes_from_file(fp);
     if (new_name_list == NULL) return;
     free_nodes(*name_list);
@@ -194,9 +194,10 @@ int main(void) {
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
                     for (size_t i = 0; i < loop_count; i++) {
                         rp[i] = get_random_node(name_list);
-                        for (size_t j = 0; j < i; j++)
+                        for (size_t j = 0; j < i; j++) {
                             while (strcmp(rp[i]->name, rp[j]->name) == 0)
                                 rp[i] = get_random_node(name_list);
+                        }
                     }
                 }
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload,
