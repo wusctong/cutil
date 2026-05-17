@@ -22,6 +22,7 @@ typedef struct {
 
 typedef struct {
     int scale;
+    size_t ppl_count;
 } Config;
 
 Node* go_node(Node* head, size_t depth) {
@@ -103,8 +104,8 @@ Node* duplicate_nodes(Node* head) {
     return new_head;
 }
 
-Node* create_nodes_from_file(const char* file_path) {
-    FILE* file = fopen(file_path, "r");
+Node* create_nodes_from_file(const char* fp) {
+    FILE* file = fopen(fp, "r");
     if (!file) return NULL;
 
     unsigned char bom[3] = {0};
@@ -143,22 +144,25 @@ Node* create_nodes_from_file(const char* file_path) {
     return head;
 }
 
-Config read_config(const char* file_path) {
-    FILE* file = fopen(file_path, "r");
-    if (file == NULL) return (Config){.scale = 0};
+Config read_config(const char* fp) {
+    FILE* file = fopen(fp, "r");
+    if (file == NULL) return (Config){.scale = 0, .ppl_count = 0};
 
     char buffer[256];
     if (fgets(buffer, 256, file) == NULL) {
         fclose(file);
-        return (Config){.scale = 0};
+        return (Config){.scale = 0, .ppl_count = 0};
     }
-
     Config conf = {.scale = atoi(buffer)};
+
+    char buffer2[256];
+    if (fgets(buffer2, 256, file) != NULL) conf.ppl_count = atoi(buffer2);
+
     fclose(file);
     return conf;
 }
 
-static int* build_cjk_codepoints(int* outCount) {
+static int* build_cjk_codepoints(int* oc) {
     int count = (0x00FF - 0x0020 + 1) + (0x303F - 0x3000 + 1) +
                 (0x9FFF - 0x4E00 + 1) + (0xFFEF - 0xFF00 + 1);
 
@@ -170,7 +174,7 @@ static int* build_cjk_codepoints(int* outCount) {
     for (int c = 0x4E00; c <= 0x9FFF; c++) codepoints[idx++] = c;
     for (int c = 0xFF00; c <= 0xFFEF; c++) codepoints[idx++] = c;
 
-    *outCount = idx;
+    *oc = idx;
     return codepoints;
 }
 
@@ -209,10 +213,10 @@ Vector2 get_element_pos(Element e, Grid g) {
     return r;
 }
 
-bool is_element_pressed(int mouse_button, Element e, Grid g) {
+bool is_element_pressed(int mb, Element e, Grid g) {
     Vector2 pos = get_element_pos(e, g);
     int mouse_x = GetMouseX(), mouse_y = GetMouseY();
-    return (IsMouseButtonPressed(mouse_button) && mouse_x >= pos.x &&
+    return (IsMouseButtonPressed(mb) && mouse_x >= pos.x &&
             mouse_x <= pos.x + g.width[e.column] - e.padding.l - e.padding.r &&
             mouse_y >= pos.y &&
             mouse_y <= pos.y + g.height[e.row] - e.padding.u - e.padding.d);
@@ -245,4 +249,13 @@ void draw_element(Element e, Grid g) {
                        bg.y + (bg.height / 2) - (textSize.y / 2)};
 
     DrawTextEx(font, e.text, textPos, e.font_size, e.spacing, e.fg_color);
+}
+
+void draw_element_override(Element e, size_t c, size_t r, const char* t,
+                           Grid g) {
+    Element overrided = e;
+    overrided.column = c;
+    overrided.row = r;
+    overrided.text = strdup(t);
+    draw_element(overrided, g);
 }

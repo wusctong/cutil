@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <string.h>
 
 #include "plug.c"
 
@@ -32,7 +33,7 @@ int main(void) {
     free(codepoints);
 
     Config conf = read_config(CONFIG_PATH);
-    if (conf.scale == 0) conf.scale = 100;
+    if (conf.scale == 0) conf = (Config){.scale = 100, .ppl_count = 1};
 
     // Menu
     Grid g_menu = {{4 * conf.scale}, {conf.scale, conf.scale}};
@@ -69,13 +70,16 @@ int main(void) {
     Grid g_rand_ppl = {
         {conf.scale, 3 * conf.scale, conf.scale, conf.scale, conf.scale},
         {conf.scale}};
-    Element e_rand_ppl_res = {
+    for (size_t i = 0; i < conf.ppl_count; i++) {
+        g_rand_ppl.height[i] = conf.scale;
+    }
+    Element e_rand_ppl_res_tmp = {
         .column = 1,
         .row = 0,
         .text = strdup("..."),
         .border_width = 0,
         .radius = 0,
-        .font_size = 0.6f * conf.scale,
+        .font_size = 0.7f * conf.scale,
         .spacing = 2.0f,
         .border_color = WHITE,
         .bg_color = WHITE,
@@ -113,13 +117,13 @@ int main(void) {
             {"朱可馨", 42}, {"杨孝恒", 43}, {"严伟宁", 44}, {"俞闵亮", 44},
             {"裴冉", 45});
     }
-    Node* ignore_list = duplicate_nodes(name_list);
-    Node* cur = ignore_list;
-    while (cur != NULL) {
-        cur->num = 1;
-        cur = cur->next;
-    }
-    Node* rp = go_node(name_list, 0);
+    Node nobody = {
+        .name = "...",
+        .num = 0,
+        .next = NULL,
+    };
+    Node** rp = malloc(conf.ppl_count * sizeof(Node*));
+    for (size_t i = 0; i < conf.ppl_count; i++) rp[i] = &nobody;
 
     // Notepad
     Grid g_notepad = {{5 * conf.scale}, {1 * conf.scale, 5 * conf.scale}};
@@ -187,7 +191,7 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         if (IsKeyPressed(KEY_RELOAD)) {
-            reload_name_list(&name_list, &e_rand_ppl_res.text);
+            reload_name_list(&name_list, &e_rand_ppl_res_tmp.text);
         }
 
         BeginDrawing();
@@ -209,14 +213,20 @@ int main(void) {
             }
             if (g_ptr == &g_rand_ppl) {
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_run, g_rand_ppl)) {
-                    rp = get_random_node(name_list);
-                    free(e_rand_ppl_res.text);
-                    e_rand_ppl_res.text =
-                        strdup(TextFormat("%d %s", rp->num, rp->name));
+                    size_t name_list_len = get_nodes_length(name_list);
+                    size_t loop_count = (conf.ppl_count < name_list_len)
+                                            ? conf.ppl_count
+                                            : name_list_len;
+                    for (size_t i = 0; i < loop_count; i++) {
+                        rp[i] = get_random_node(name_list);
+                        for (size_t j = 0; j < i; j++)
+                            while (strcmp(rp[i]->name, rp[j]->name) == 0)
+                                rp[i] = get_random_node(name_list);
+                    }
                 }
                 if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload,
                                        g_rand_ppl)) {
-                    reload_name_list(&name_list, &e_rand_ppl_res.text);
+                    reload_name_list(&name_list, &e_rand_ppl_res_tmp.text);
                 }
             }
         }
@@ -226,7 +236,11 @@ int main(void) {
             draw_element(e_nodepad, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {
             draw_element(e_back, *g_ptr);
-            draw_element(e_rand_ppl_res, *g_ptr);
+            // draw_element(e_rand_ppl_res_tmp, *g_ptr);
+            for (size_t i = 0; i < conf.ppl_count; i++) {
+                draw_element_override(e_rand_ppl_res_tmp, 1, i, rp[i]->name,
+                                      *g_ptr);
+            }
             draw_element(e_run, *g_ptr);
             draw_element(e_reload, *g_ptr);
             draw_element(e_rand_ppl_ignore, *g_ptr);
@@ -238,7 +252,7 @@ int main(void) {
     }
 
     UnloadFont(extern_font);
-    free(e_rand_ppl_res.text);
+    free(e_rand_ppl_res_tmp.text);
     free_nodes(name_list);
 
     CloseWindow();
