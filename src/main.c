@@ -67,9 +67,8 @@ int main(void) {
     };
 
     // Random People
-    Grid g_rand_ppl = {
-        {conf.scale, 3 * conf.scale, conf.scale, conf.scale, conf.scale},
-        {conf.scale}};
+    Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, conf.scale, conf.scale},
+                       {conf.scale}};
     for (size_t i = 0; i < conf.ppl_count; i++) {
         g_rand_ppl.height[i] = conf.scale;
     }
@@ -85,20 +84,6 @@ int main(void) {
         .bg_color = WHITE,
         .fg_color = BLACK,
         .padding = {0, 0, 0, 0},
-        .font = extern_font,
-    };
-    Element e_rand_ppl_ignore = {
-        .column = 4,
-        .row = 0,
-        .text = strdup("置"),
-        .border_width = 0.02f * conf.scale,
-        .radius = 10.0f,
-        .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
-        .border_color = BLACK,
-        .bg_color = WHITE,
-        .fg_color = BLACK,
-        .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
     Node* name_list = create_nodes_from_file(NAME_LIST_PATH);
@@ -236,14 +221,12 @@ int main(void) {
             draw_element(e_nodepad, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {
             draw_element(e_back, *g_ptr);
-            // draw_element(e_rand_ppl_res_tmp, *g_ptr);
-            for (size_t i = 0; i < conf.ppl_count; i++) {
-                draw_element_override(e_rand_ppl_res_tmp, 1, i, rp[i]->name,
-                                      *g_ptr);
-            }
+            for (size_t i = 0; i < conf.ppl_count; i++)
+                draw_element_override(
+                    e_rand_ppl_res_tmp, 1, i,
+                    TextFormat("%d %s", rp[i]->num, rp[i]->name), *g_ptr);
             draw_element(e_run, *g_ptr);
             draw_element(e_reload, *g_ptr);
-            draw_element(e_rand_ppl_ignore, *g_ptr);
         } else if (g_ptr == &g_notepad) {
             draw_element(e_back, *g_ptr);
             draw_element(e_notepad_pad, *g_ptr);
