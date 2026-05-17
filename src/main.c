@@ -1,10 +1,13 @@
 #include "plug.c"
+#include "raylib.h"
 
 #define EXTERN_FONT_PATH "font.ttf"
 #define CONFIG_PATH "config.txt"
 #define NAME_LIST_PATH "names.txt"
 
-#define KEY_RELOAD KEY_R
+#define BG_COLOR WHITE
+#define PRIMARY_COLOR BLACK
+#define SECONDARY_COLOR BLUE
 
 #define MAX_FONT_SIZE 70
 
@@ -39,9 +42,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
-        .border_color = BLACK,
-        .bg_color = WHITE,
-        .fg_color = BLACK,
+        .border_color = SECONDARY_COLOR,
+        .bg_color = SECONDARY_COLOR,
+        .fg_color = WHITE,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -53,9 +56,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
-        .border_color = BLACK,
+        .border_color = SECONDARY_COLOR,
         .bg_color = WHITE,
-        .fg_color = BLACK,
+        .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -74,9 +77,9 @@ int main(void) {
         .radius = 0,
         .font_size = 0.7f * conf.scale,
         .spacing = 2.0f,
-        .border_color = WHITE,
-        .bg_color = WHITE,
-        .fg_color = BLACK,
+        .border_color = BLANK,
+        .bg_color = BLANK,
+        .fg_color = PRIMARY_COLOR,
         .padding = {0, 0, 0, 0},
         .font = extern_font,
     };
@@ -114,9 +117,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 40.0f,
         .spacing = 2.0f,
-        .border_color = BLACK,
+        .border_color = SECONDARY_COLOR,
         .bg_color = WHITE,
-        .fg_color = BLACK,
+        .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -131,9 +134,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
-        .border_color = BLACK,
+        .border_color = SECONDARY_COLOR,
         .bg_color = WHITE,
-        .fg_color = BLACK,
+        .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -145,9 +148,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
-        .border_color = BLACK,
-        .bg_color = WHITE,
-        .fg_color = BLACK,
+        .border_color = SECONDARY_COLOR,
+        .bg_color = SECONDARY_COLOR,
+        .fg_color = WHITE,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -159,9 +162,9 @@ int main(void) {
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
-        .border_color = BLACK,
+        .border_color = SECONDARY_COLOR,
         .bg_color = WHITE,
-        .fg_color = BLACK,
+        .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -170,7 +173,7 @@ int main(void) {
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground(WHITE);
+        ClearBackground(BG_COLOR);
 
         if (g_ptr == &g_menu) {
             if (is_element_pressed(MOUSE_BUTTON_LEFT, e_rand_ppl, g_menu)) {
