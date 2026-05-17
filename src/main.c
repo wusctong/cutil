@@ -1,4 +1,5 @@
 #include <raylib.h>
+#include <time.h>
 
 #include "plug.c"
 
@@ -66,8 +67,9 @@ int main(void) {
     };
 
     // Random People
-    Grid g_rand_ppl = {{conf.scale, 3 * conf.scale, conf.scale, conf.scale},
-                       {conf.scale}};
+    Grid g_rand_ppl = {
+        {conf.scale, 3 * conf.scale, conf.scale, conf.scale, conf.scale},
+        {conf.scale}};
     Element e_rand_ppl_res = {
         .column = 1,
         .row = 0,
@@ -80,6 +82,20 @@ int main(void) {
         .bg_color = WHITE,
         .fg_color = BLACK,
         .padding = {0, 0, 0, 0},
+        .font = extern_font,
+    };
+    Element e_rand_ppl_ignore = {
+        .column = 4,
+        .row = 0,
+        .text = strdup("置"),
+        .border_width = 0.02f * conf.scale,
+        .radius = 10.0f,
+        .font_size = 0.6 * conf.scale,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
     Node* name_list = create_nodes_from_file(NAME_LIST_PATH);
@@ -98,61 +114,75 @@ int main(void) {
             {"朱可馨", 42}, {"杨孝恒", 43}, {"严伟宁", 44}, {"俞闵亮", 44},
             {"裴冉", 45});
     }
+    Node* ignore_list = duplicate_nodes(name_list);
+    Node* cur = ignore_list;
+    while (cur != NULL) {
+        cur->num = 1;
+        cur = cur->next;
+    }
     Node* rp = go_node(name_list, 0);
 
     // Notepad
     Grid g_notepad = {{5 * conf.scale}, {1 * conf.scale, 5 * conf.scale}};
-    Element e_notepad_pad = {0,
-                             1,
-                             "",
-                             2.0f,
-                             10.0f,
-                             40.0f,
-                             2.0f,
-                             BLACK,
-                             WHITE,
-                             BLACK,
-                             {10, 10, 10, 10},
-                             extern_font};
+    Element e_notepad_pad = {
+        .column = 0,
+        .row = 1,
+        .text = "",
+        .border_width = 2.0f,
+        .radius = 10.0f,
+        .font_size = 40.0f,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = extern_font,
+    };
 
     // Global
     Grid* g_ptr = &g_menu;
-    Element e_back = {.column = 0,
-                      .row = 0,
-                      .text = "<",
-                      .border_width = 0.02f * conf.scale,
-                      .radius = 10.0f,
-                      .font_size = 0.6 * conf.scale,
-                      .spacing = 2.0f,
-                      .border_color = BLACK,
-                      .bg_color = WHITE,
-                      .fg_color = BLACK,
-                      .padding = {10, 10, 10, 10},
-                      .font = extern_font};
-    Element e_run = {.column = 2,
-                     .row = 0,
-                     .text = "抽",
-                     .border_width = 0.02f * conf.scale,
-                     .radius = 10.0f,
-                     .font_size = 0.4 * conf.scale,
-                     .spacing = 2.0f,
-                     .border_color = BLACK,
-                     .bg_color = WHITE,
-                     .fg_color = BLACK,
-                     .padding = {10, 10, 10, 10},
-                     .font = extern_font};
-    Element e_reload = {.column = 3,
-                        .row = 0,
-                        .text = "载",
-                        .border_width = 0.02f * conf.scale,
-                        .radius = 10.0f,
-                        .font_size = 0.4 * conf.scale,
-                        .spacing = 2.0f,
-                        .border_color = BLACK,
-                        .bg_color = WHITE,
-                        .fg_color = BLACK,
-                        .padding = {10, 10, 10, 10},
-                        .font = extern_font};
+    Element e_back = {
+        .column = 0,
+        .row = 0,
+        .text = "<",
+        .border_width = 0.02f * conf.scale,
+        .radius = 10.0f,
+        .font_size = 0.6 * conf.scale,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = extern_font,
+    };
+    Element e_run = {
+        .column = 2,
+        .row = 0,
+        .text = "抽",
+        .border_width = 0.02f * conf.scale,
+        .radius = 10.0f,
+        .font_size = 0.6 * conf.scale,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = extern_font,
+    };
+    Element e_reload = {
+        .column = 3,
+        .row = 0,
+        .text = "载",
+        .border_width = 0.02f * conf.scale,
+        .radius = 10.0f,
+        .font_size = 0.6 * conf.scale,
+        .spacing = 2.0f,
+        .border_color = BLACK,
+        .bg_color = WHITE,
+        .fg_color = BLACK,
+        .padding = {10, 10, 10, 10},
+        .font = extern_font,
+    };
 
     resize_window(*g_ptr);
 
@@ -185,7 +215,8 @@ int main(void) {
                     e_rand_ppl_res.text =
                         strdup(TextFormat("%d %s", rp->num, rp->name));
                 }
-                if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload, g_rand_ppl)) {
+                if (is_element_pressed(MOUSE_BUTTON_LEFT, e_reload,
+                                       g_rand_ppl)) {
                     reload_name_list(&name_list, &e_rand_ppl_res.text);
                 }
             }
@@ -199,6 +230,7 @@ int main(void) {
             draw_element(e_rand_ppl_res, *g_ptr);
             draw_element(e_run, *g_ptr);
             draw_element(e_reload, *g_ptr);
+            draw_element(e_rand_ppl_ignore, *g_ptr);
         } else if (g_ptr == &g_notepad) {
             draw_element(e_back, *g_ptr);
             draw_element(e_notepad_pad, *g_ptr);

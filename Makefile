@@ -8,7 +8,7 @@ RAYLIB_WIN_PATH := ../../cross_platform/raylib
 RAYLIB_WIN_INC  := -I$(RAYLIB_WIN_PATH)/include
 RAYLIB_WIN_LIB  := -L$(RAYLIB_WIN_PATH)/lib
 
-CFLAGS  := -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic -std=c11 -O2
+CFLAGS  := -D_XOPEN_SOURCE=500 -Wall -Wextra -pedantic -std=c11 -O2
 
 ifeq ($(UNAME),Darwin)
     SHELL        := /bin/bash
