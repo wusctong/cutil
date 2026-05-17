@@ -1,7 +1,0 @@
-CompileFlags:
-  Add:
-    - --language=c
-    - -std=c11
-    - -D_XOPEN_SOURCE=500
-    - -I/opt/homebrew/include
-    - -L/opt/homebrew/lib
