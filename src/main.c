@@ -5,9 +5,9 @@
 #define CONFIG_PATH "config.txt"
 #define NAME_LIST_PATH "names.txt"
 
-#define BG_COLOR WHITE
+#define BG_COLOR CLITERAL(Color){250, 247, 235, 255}
 #define PRIMARY_COLOR BLACK
-#define SECONDARY_COLOR BLUE
+#define SECONDARY_COLOR CLITERAL(Color){127, 0, 25, 255}
 
 #define MAX_FONT_SIZE 70
 
@@ -44,7 +44,7 @@ int main(void) {
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
         .bg_color = SECONDARY_COLOR,
-        .fg_color = WHITE,
+        .fg_color = BG_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -57,7 +57,7 @@ int main(void) {
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
-        .bg_color = WHITE,
+        .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
@@ -118,7 +118,7 @@ int main(void) {
         .font_size = 40.0f,
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
-        .bg_color = WHITE,
+        .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
@@ -135,7 +135,7 @@ int main(void) {
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
-        .bg_color = WHITE,
+        .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
@@ -150,7 +150,7 @@ int main(void) {
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
         .bg_color = SECONDARY_COLOR,
-        .fg_color = WHITE,
+        .fg_color = BG_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
     };
@@ -163,7 +163,7 @@ int main(void) {
         .font_size = 0.6 * conf.scale,
         .spacing = 2.0f,
         .border_color = SECONDARY_COLOR,
-        .bg_color = WHITE,
+        .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
         .padding = {10, 10, 10, 10},
         .font = extern_font,
