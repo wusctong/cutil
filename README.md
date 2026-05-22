@@ -1,12 +1,14 @@
 # Class Utility
 
-Utility functions for classroom.
+Utilities for classrooms.
+
 
 ## Dependencies
 
 `make` - Build tool.
 
 `raylib` - Graphics library.
+
 
 ## Requirements
 
@@ -16,10 +18,12 @@ put it under the same directory as the executable
 **Required for building, replace it in the Makefile.**
 
 `names.txt` - A name list (optional).
+One name for each line. Set to my class's by default.
 
 `config.txt` - A configuration file (optional).
 Only reads the first line of the file as the scale value now.
 More functionality will be implemented.
+
 
 ## Building
 
@@ -41,8 +45,18 @@ To disable console window for windows, run the following command:
 make build-win-release
 ```
 
+To clean up the build directory, run the following command:
+
+``` bash
+make clean
+```
+
+
 ## Usage
 
-Just run the executable :)
+Run the executable file, it's a GUI application.
+
 
 ---
+
+**©wusctong26**
