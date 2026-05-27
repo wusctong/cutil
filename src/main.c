@@ -9,7 +9,7 @@
 #define PRIMARY_COLOR BLACK
 #define SECONDARY_COLOR CLITERAL(Color){127, 0, 25, 255}
 
-#define MAX_FONT_SIZE 70
+#define MAX_FONT_SIZE 80
 
 void load_name_list(Node** name_list, const char* fp) {
     Node* new_name_list = create_nodes_from_file(fp);
@@ -23,11 +23,14 @@ int main(void) {
     SetTargetFPS(60);
     SetRandomSeed((unsigned int)time(NULL));
 
-    int cpCount = 0;
-    int* codepoints = build_cjk_codepoints(&cpCount);
+    int cp_count = 0;
+    int* codepoints = build_cjk_codepoints(&cp_count);
     Font extern_font =
-        LoadFontEx(EXTERN_FONT_PATH, MAX_FONT_SIZE, codepoints, cpCount);
+        LoadFontEx(EXTERN_FONT_PATH, MAX_FONT_SIZE, codepoints, cp_count);
     free(codepoints);
+
+    SetTextureFilter(extern_font.texture, TEXTURE_FILTER_BILINEAR);
+    GenTextureMipmaps(&extern_font.texture);
 
     Config conf = read_config(CONFIG_PATH);
     if (conf.scale == 0) conf = (Config){.scale = 100, .ppl_count = 1};
