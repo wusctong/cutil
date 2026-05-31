@@ -104,6 +104,13 @@ Node* duplicate_nodes(Node* head) {
     return new_head;
 }
 
+static void strip_crlf(char* s) {
+    size_t len = strlen(s);
+    while (len > 0 && (s[len - 1] == '\n' || s[len - 1] == '\r')) {
+        s[--len] = '\0';
+    }
+}
+
 Node* create_nodes_from_file(const char* fp) {
     FILE* file = fopen(fp, "r");
     if (!file) return NULL;
@@ -120,13 +127,8 @@ Node* create_nodes_from_file(const char* fp) {
     int count = 1;
 
     while (fgets(buffer, sizeof(buffer), file)) {
-        size_t len = strlen(buffer);
-        while (len > 0 &&
-               (buffer[len - 1] == '\n' || buffer[len - 1] == '\r')) {
-            buffer[len - 1] = '\0';
-            len--;
-        }
-        if (len == 0) continue;
+        strip_crlf(buffer);
+        if (strlen(buffer) == 0) continue;
 
         Node* new_node = malloc(sizeof(Node));
         new_node->name = strdup(buffer);
@@ -153,10 +155,14 @@ Config read_config(const char* fp) {
         fclose(file);
         return (Config){.scale = 0, .ppl_count = 0};
     }
+    strip_crlf(buffer);
     Config conf = {.scale = atoi(buffer)};
 
     char buffer2[256];
-    if (fgets(buffer2, 256, file) != NULL) conf.ppl_count = atoi(buffer2);
+    if (fgets(buffer2, 256, file) != NULL) {
+        strip_crlf(buffer2);
+        conf.ppl_count = atoi(buffer2);
+    }
 
     fclose(file);
     return conf;
