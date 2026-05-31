@@ -44,7 +44,7 @@ int main(void) {
         .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = SECONDARY_COLOR,
         .fg_color = BG_COLOR,
@@ -58,7 +58,7 @@ int main(void) {
         .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
@@ -79,7 +79,7 @@ int main(void) {
         .border_width = 0,
         .radius = 0,
         .font_size = 0.7f * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = BLANK,
         .bg_color = BLANK,
         .fg_color = PRIMARY_COLOR,
@@ -119,7 +119,7 @@ int main(void) {
         .border_width = 2.0f,
         .radius = 10.0f,
         .font_size = 40.0f,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
@@ -136,7 +136,7 @@ int main(void) {
         .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
@@ -150,7 +150,7 @@ int main(void) {
         .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = SECONDARY_COLOR,
         .fg_color = BG_COLOR,
@@ -164,7 +164,7 @@ int main(void) {
         .border_width = 0.02f * conf.scale,
         .radius = 10.0f,
         .font_size = 0.6 * conf.scale,
-        .spacing = 2.0f,
+        .spacing = 0,
         .border_color = SECONDARY_COLOR,
         .bg_color = BG_COLOR,
         .fg_color = SECONDARY_COLOR,
@@ -225,12 +225,12 @@ int main(void) {
             draw_element(e_nodepad, *g_ptr);
         } else if (g_ptr == &g_rand_ppl) {
             draw_element(e_back, *g_ptr);
+            draw_element(e_run, *g_ptr);
+            draw_element(e_reload, *g_ptr);
             for (size_t i = 0; i < conf.ppl_count; i++)
                 draw_element_override(
                     e_rand_ppl_res_tmp, 1, i,
                     TextFormat("%d %s", rp[i]->num, rp[i]->name), *g_ptr);
-            draw_element(e_run, *g_ptr);
-            draw_element(e_reload, *g_ptr);
         } else if (g_ptr == &g_notepad) {
             draw_element(e_back, *g_ptr);
             draw_element(e_notepad_pad, *g_ptr);
