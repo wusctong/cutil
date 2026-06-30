@@ -2,6 +2,8 @@
 
 Utilities for classrooms.
 
+Also includes a simple responsive UI framework.
+
 
 ## Dependencies
 
@@ -21,8 +23,8 @@ put it under the same directory as the executable
 One name for each line. Set to my class's by default.
 
 `config.txt` - A configuration file (optional).
-Only reads the first line of the file as the scale value now.
-More functionality will be implemented.
+The first line of the file is the scale value (100 by default).
+The second line is people drawn per round (1 by default).
 
 
 ## Building
